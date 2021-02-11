@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roulette</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+
+    <table border="1px" style="width: 100%; height: 290px; text-align: center; color: aliceblue; border: none">
+        <tr>
+            <td rowspan="3" bgcolor="green" onclick="doBet(0)">&nbsp;&nbsp;0</td>
+            <td bgcolor="red" onclick="doBet(3)">&nbsp;&nbsp;3</td>
+            <td bgcolor="black" onclick="doBet(6)">&nbsp;&nbsp;6</td>
+            <td bgcolor="red" onclick="doBet(9)">&nbsp;&nbsp;9</td>
+            <td bgcolor="red" onclick="doBet(12)">12</td>
+
+            <td bgcolor="black" onclick="doBet(15)">15</td>
+            <td bgcolor="red" onclick="doBet(18)">18</td>
+            <td bgcolor="red" onclick="doBet(21)">21</td>
+            <td bgcolor="black" onclick="doBet(24)">24</td>
+
+            <td bgcolor="red" onclick="doBet(27)">27</td>
+            <td bgcolor="red" onclick="doBet(30)">30</td>
+            <td bgcolor="black" onclick="doBet(33)">33</td>
+            <td bgcolor="red" onclick="doBet(36)">36</td>
+
+            <td bgcolor="green" onclick="doBet('3rd')">3rd</td>
+        </tr>
+
+        <tr>
+            <td bgcolor="black" onclick="doBet(2)">2</td>
+            <td bgcolor="red" onclick="doBet(5)">5</td>
+            <td bgcolor="black" onclick="doBet(8)">8</td>
+            <td bgcolor="black" onclick="doBet(11)">11</td>
+
+            <td bgcolor="red" onclick="doBet(14)">14</td>
+            <td bgcolor="black" onclick="doBet(17)">17</td>
+            <td bgcolor="black" onclick="doBet(20)">20</td>
+            <td bgcolor="red" onclick="doBet(23)">23</td>
+
+            <td bgcolor="black" onclick="doBet(26)">26</td>
+            <td bgcolor="black" onclick="doBet(29)">29</td>
+            <td bgcolor="red" onclick="doBet(32)">32</td>
+            <td bgcolor="black" onclick="doBet(35)">35</td>
+
+            <td bgcolor="green" onclick="doBet('2nd')">2nd</td>
+        </tr>
+
+        <tr>
+            <td bgcolor="red" onclick="doBet(1)">1</td>
+            <td bgcolor="black" onclick="doBet(4)">4</td>
+            <td bgcolor="red" onclick="doBet(7)">7</td>
+            <td bgcolor="black" onclick="doBet(10)">10</td>
+
+            <td bgcolor="black" onclick="doBet(13)">13</td>
+            <td bgcolor="red" onclick="doBet(16)">16</td>
+            <td bgcolor="red" onclick="doBet(19)">19</td>
+            <td bgcolor="black" onclick="doBet(22)">22</td>
+
+            <td bgcolor="red" onclick="doBet(25)">25</td>
+            <td bgcolor="black" onclick="doBet(28)">28</td>
+            <td bgcolor="black" onclick="doBet(31)">31</td>
+            <td bgcolor="red" onclick="doBet(34)">34</td>
+
+            <td bgcolor="green" onclick="doBet('1st')">1st</td>
+        </tr>
+
+                <tr>
+                    <td style="border: none"></td>
+                    <td colspan="4" bgcolor="green" onclick="doBet('1-12')">1-12</td>
+                    <td colspan="4" bgcolor="green" onclick="doBet('13-24')">13-24</td>
+                    <td colspan="4" bgcolor="green" onclick="doBet('25-36')">25-36</td>
+                </tr>
+
+                <tr>
+                    <td style="border: none"></td>
+                    <td colspan="2" bgcolor="green" onclick="doBet('1-18')">1-18</td>
+                    <td colspan="2" bgcolor="green" onclick="doBet('even')">EVEN</td>
+                    <td colspan="2" bgcolor="black" onclick="doBet('black')">BLACK</td>
+                    <td colspan="2" bgcolor="red" onclick="doBet('red')">RED</td>
+                    <td colspan="2" bgcolor="green" onclick="doBet('odd')">ODD</td>
+                    <td colspan="2" bgcolor="green" onclick="doBet('19-36')">19-36</td>
+                </tr>
+    </table>
+    <div style="display: flex; justify-content: space-between; width: 60%">
+        <h3 id="money"></h3>
+        <div>
+            <h3>Your bets:</h3>
+            <div id="bets">
+
+            </div>
+        </div>
+        <div>
+            <button onclick="spin()"><h3>Spin!</h3></button>
+            <div id="result"></div>
+        </div>
+    </div>
+</body>
+<script>
+    let bets = [];
+    let money = 150;
+    updateMoney();
+
+    function doBet(number) {
+        for (let i = 0; i < bets.length; i++) {
+            if (bets[i].type === number) {
+                alert("You have already made bet like this!");
+                return;
+            }
+        }
+        let sum = prompt('Your bet for ' + number + ':');
+        if (Number(sum) === Number || sum === null) {
+        } else {
+            if (Number(sum) <= money) {
+                bets.push({type: number, money: sum});
+                money = money - sum;
+                updateMoney();
+                updateBets();
+            }
+        }
+    }
+
+    function updateMoney() {
+        document.getElementById('money').innerText = 'Your money: ' + money;
+    }
+
+    function updateBets() {
+        let text = '';
+        for (let i = 0; i < bets.length; i++) {
+            text = text + `<div style="display: flex">
+                           <p>-  Field: ${bets[i].type}, Bet: ${bets[i].money}</p>
+                           <button onclick="deleteBet(${i})">DELETE</button>
+                           </div>`;
+        }
+        document.getElementById('bets').innerHTML = text;
+    }
+
+    function deleteBet(id) {
+        money = Number(money) + Number(bets[id].money);
+        bets.splice(id, 1);
+        updateBets();
+        updateMoney();
+    }
+
+    function spin() {
+        if (bets.length === 0) alert("You didn't make any bet!");
+        else {
+            $.ajax({
+                url: '/spin',
+                type: 'POST',
+                data: {
+                    bets: bets
+                },
+                success: (data) => {
+                    document.getElementById('result').innerHTML = `<h3 style="background-color: ${data.answer.color}; text-align: center; color: aliceblue">${data.answer.number}</h3>`;
+                    money += data.win;
+                    updateMoney();
+                    bets = [];
+                    updateBets();
+                }
+            });
+        }
+    }
+</script>
+</html>
