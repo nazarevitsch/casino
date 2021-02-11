@@ -7,6 +7,9 @@ const roulette = require('./games/roulette.js');
 const router = new Router();
 
 router
+    .get('/', async ctx => {
+        await ctx.render('index');
+    })
     .get('/roulette', async ctx => {
         await ctx.render('roulette_game');
     })
